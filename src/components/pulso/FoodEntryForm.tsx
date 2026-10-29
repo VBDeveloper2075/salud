@@ -287,7 +287,7 @@ export function FoodEntryForm({ onAddMeal }: FoodEntryFormProps) {
     listOpen && (query.length > 0 || dropdownItems.length > 0);
 
   return (
-    <section className="rounded-2xl border border-emerald-100 bg-white shadow-sm">
+    <section className="w-full min-w-0 overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-sm">
       <header className="flex items-center gap-2 border-b border-emerald-50 px-4 py-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 text-white">
           <UtensilsCrossed className="h-4 w-4" />

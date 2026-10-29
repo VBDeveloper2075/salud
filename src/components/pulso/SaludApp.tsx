@@ -10,9 +10,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { ActivitiesPanel } from "@/components/pulso/ActivitiesPanel";
-import { FoodEntryForm } from "@/components/pulso/FoodEntryForm";
-import { DailyNutritionTable } from "@/components/pulso/DailyNutritionTable";
-import { BalanceDashboard } from "@/components/pulso/BalanceDashboard";
+import { NutritionPanel } from "@/components/pulso/NutritionPanel";
 import { DailyVideoPlayer } from "@/components/pulso/DailyVideoPlayer";
 import { getDailyBalance, todayIsoDate } from "@/lib/nutrition/calculations";
 import {
@@ -236,7 +234,11 @@ export function SaludApp() {
         </nav>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-6">
+      <main
+        className={`mx-auto w-full max-w-6xl px-4 py-6 ${
+          tab !== "home" ? "min-w-0 overflow-x-clip" : ""
+        }`}
+      >
         <div
           key={tab}
           className="animate-[fadeIn_0.25s_ease-out]"
@@ -251,24 +253,18 @@ export function SaludApp() {
           )}
 
           {tab === "nutrition" && (
-            <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
-              <div className="flex flex-col gap-6">
-                <FoodEntryForm onAddMeal={handleAddMeal} />
-                <DailyNutritionTable meals={dayState.meals} />
-              </div>
-              <aside className="lg:sticky lg:top-36 lg:self-start">
-                <BalanceDashboard
-                  calorieGoal={profile.daily_calorie_goal}
-                  consumed={balance.consumed.calories}
-                  burned={balance.burned}
-                  remaining={balance.remainingCalories}
-                  protein_g={balance.consumed.protein_g}
-                  carbs_g={balance.consumed.carbs_g}
-                  fat_g={balance.consumed.fat_g}
-                  weeklyNetCalories={weeklyNetCalories}
-                />
-              </aside>
-            </div>
+            <NutritionPanel
+              meals={dayState.meals}
+              onAddMeal={handleAddMeal}
+              calorieGoal={profile.daily_calorie_goal}
+              consumed={balance.consumed.calories}
+              burned={balance.burned}
+              remaining={balance.remainingCalories}
+              protein_g={balance.consumed.protein_g}
+              carbs_g={balance.consumed.carbs_g}
+              fat_g={balance.consumed.fat_g}
+              weeklyNetCalories={weeklyNetCalories}
+            />
           )}
 
           {tab === "activities" && <ActivitiesPanel />}

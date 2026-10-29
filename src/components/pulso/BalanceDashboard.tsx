@@ -41,7 +41,7 @@ export function BalanceDashboard({
   ];
 
   return (
-    <section className="space-y-4">
+    <section className="w-full min-w-0 space-y-4">
       <div className="rounded-2xl border border-zinc-100 bg-white p-4 shadow-sm">
         <div className="mb-2 flex items-end justify-between">
           <div>
@@ -102,7 +102,7 @@ export function BalanceDashboard({
         <h3 className="mb-3 text-sm font-semibold text-zinc-900">
           Macros del día (g)
         </h3>
-        <div className="h-48 w-full">
+        <div className="h-48 min-w-0 w-full max-w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={macroChartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f4f4f5" />
@@ -122,7 +122,7 @@ export function BalanceDashboard({
         <h3 className="mb-3 text-sm font-semibold text-zinc-900">
           Vista semanal (neto kcal)
         </h3>
-        <div className="h-44 w-full">
+        <div className="h-44 min-w-0 w-full max-w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={weeklyNetCalories}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f4f4f5" />

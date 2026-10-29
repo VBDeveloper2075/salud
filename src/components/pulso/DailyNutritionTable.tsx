@@ -24,11 +24,13 @@ export function DailyNutritionTable({ meals }: DailyNutritionTableProps) {
   const bySlot = mealsBySlot(meals);
 
   return (
-    <section className="rounded-2xl border border-zinc-100 bg-white p-4 shadow-sm">
-      <h2 className="mb-3 text-sm font-semibold text-zinc-900">
-        Desglose por comida
-      </h2>
-      <div className="overflow-x-auto">
+    <section className="w-full min-w-0 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+      <div className="border-b border-zinc-100 px-4 py-3">
+        <h2 className="text-sm font-semibold text-zinc-900">
+          Desglose por comida
+        </h2>
+      </div>
+      <div className="overflow-x-auto px-4 py-3">
         <table className="w-full min-w-[520px] text-left text-sm">
           <thead>
             <tr className="border-b border-zinc-100 text-xs uppercase tracking-wide text-zinc-500">
@@ -76,7 +78,7 @@ export function DailyNutritionTable({ meals }: DailyNutritionTableProps) {
       </div>
 
       {meals.length > 0 && (
-        <ul className="mt-4 space-y-2 border-t border-zinc-100 pt-3 text-xs text-zinc-600">
+        <ul className="space-y-2 border-t border-zinc-100 px-4 py-3 text-xs text-zinc-600">
           {meals.flatMap((meal) =>
             meal.items.map((item) => (
               <li key={item.id} className="flex justify-between gap-2">
