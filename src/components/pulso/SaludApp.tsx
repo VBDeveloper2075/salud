@@ -7,6 +7,7 @@ import { ActivitiesPanel } from "@/components/pulso/ActivitiesPanel";
 import { FoodEntryForm } from "@/components/pulso/FoodEntryForm";
 import { DailyNutritionTable } from "@/components/pulso/DailyNutritionTable";
 import { BalanceDashboard } from "@/components/pulso/BalanceDashboard";
+import { DailyVideoPlayer } from "@/components/pulso/DailyVideoPlayer";
 import { getDailyBalance, todayIsoDate } from "@/lib/nutrition/calculations";
 import {
   DAY_KEY_PREFIX,
@@ -173,6 +174,7 @@ export function SaludApp() {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-6">
+        <DailyVideoPlayer />
         {tab === "nutrition" ? (
           <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
             <div className="flex flex-col gap-6">
