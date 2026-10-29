@@ -1,8 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Activity, Dumbbell, UserRound, UtensilsCrossed } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Activity,
+  Dumbbell,
+  Home,
+  UserRound,
+  UtensilsCrossed,
+} from "lucide-react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { ActivitiesPanel } from "@/components/pulso/ActivitiesPanel";
 import { FoodEntryForm } from "@/components/pulso/FoodEntryForm";
 import { DailyNutritionTable } from "@/components/pulso/DailyNutritionTable";
@@ -17,7 +23,13 @@ import {
 import type { DailyNutritionState, MealEntry, UserProfile } from "@/types/nutrition";
 import { DEFAULT_PROFILE } from "@/types/nutrition";
 
-type MainTab = "nutrition" | "activities";
+type MainTab = "home" | "nutrition" | "activities";
+
+const TAB_LABELS: Record<MainTab, string> = {
+  home: "Inicio",
+  nutrition: "Nutrición",
+  activities: "Actividades",
+};
 
 function loadProfile(): UserProfile {
   if (typeof window === "undefined") return DEFAULT_PROFILE;
@@ -53,8 +65,32 @@ function weekdayShort(date: Date) {
   return date.toLocaleDateString("es-AR", { weekday: "short" });
 }
 
+function TabButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-2.5 text-xs font-medium transition-all duration-200 sm:flex-none sm:gap-2 sm:px-4 sm:text-sm ${
+        active
+          ? "bg-emerald-600 text-white shadow-sm"
+          : "text-zinc-600 hover:bg-zinc-100 active:scale-[0.98]"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
 export function SaludApp() {
-  const [tab, setTab] = useState<MainTab>("nutrition");
+  const [tab, setTab] = useState<MainTab>("home");
   const [profile, setProfile] = useState<UserProfile>(() => loadProfile());
 
   useEffect(() => {
@@ -110,6 +146,13 @@ export function SaludApp() {
     }));
   }, []);
 
+  const headerSubtitle =
+    tab === "home"
+      ? "Rutina y bienestar del día"
+      : tab === "nutrition"
+        ? "Registro de comidas y balance"
+        : "Calendario de actividades";
+
   if (!logDate) {
     return (
       <div className="flex min-h-full items-center justify-center bg-zinc-50 text-sm text-zinc-500">
@@ -119,84 +162,117 @@ export function SaludApp() {
   }
 
   return (
-    <div className="min-h-full bg-gradient-to-b from-emerald-50/80 to-zinc-50">
-      <header className="sticky top-0 z-10 border-b border-emerald-100/80 bg-white/90 backdrop-blur">
+    <div
+      className={`min-h-full ${
+        tab === "home"
+          ? "bg-gradient-to-b from-emerald-950 via-zinc-900 to-zinc-950"
+          : "bg-gradient-to-b from-emerald-50/80 to-zinc-50"
+      }`}
+    >
+      <header
+        className={`sticky top-0 z-20 border-b backdrop-blur-md ${
+          tab === "home"
+            ? "border-white/10 bg-zinc-950/80"
+            : "border-emerald-100/80 bg-white/90"
+        }`}
+      >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">
+            <div
+              className={`flex h-10 w-10 items-center justify-center rounded-xl text-white ${
+                tab === "home" ? "bg-emerald-500" : "bg-emerald-600"
+              }`}
+            >
               <Activity className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold tracking-tight text-zinc-900">
+              <h1
+                className={`text-lg font-semibold tracking-tight ${
+                  tab === "home" ? "text-white" : "text-zinc-900"
+                }`}
+              >
                 Salud
               </h1>
-              <p className="text-xs text-zinc-500">
-                {tab === "nutrition"
-                  ? "Registro de comidas"
-                  : "Registro de actividades"}
+              <p
+                className={`text-xs ${
+                  tab === "home" ? "text-emerald-100/70" : "text-zinc-500"
+                }`}
+              >
+                {headerSubtitle}
               </p>
             </div>
           </div>
           <Link
             href="/perfil"
-            className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50"
+            className={`inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition ${
+              tab === "home"
+                ? "border-white/15 text-white hover:bg-white/10"
+                : "border-zinc-200 text-zinc-700 hover:bg-zinc-50"
+            }`}
           >
             <UserRound className="h-4 w-4" />
-            Perfil
+            <span className="hidden sm:inline">Perfil</span>
           </Link>
         </div>
-        <nav className="mx-auto flex max-w-6xl gap-1 px-4 pb-3">
-          <button
-            type="button"
+        <nav className="mx-auto flex max-w-6xl gap-1 px-4 pb-3 sm:gap-2">
+          <TabButton active={tab === "home"} onClick={() => setTab("home")}>
+            <Home className="h-4 w-4 shrink-0" />
+            {TAB_LABELS.home}
+          </TabButton>
+          <TabButton
+            active={tab === "nutrition"}
             onClick={() => setTab("nutrition")}
-            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition ${
-              tab === "nutrition"
-                ? "bg-emerald-600 text-white"
-                : "text-zinc-600 hover:bg-zinc-100"
-            }`}
           >
-            <UtensilsCrossed className="h-4 w-4" />
-            Nutrición
-          </button>
-          <button
-            type="button"
+            <UtensilsCrossed className="h-4 w-4 shrink-0" />
+            {TAB_LABELS.nutrition}
+          </TabButton>
+          <TabButton
+            active={tab === "activities"}
             onClick={() => setTab("activities")}
-            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition ${
-              tab === "activities"
-                ? "bg-emerald-600 text-white"
-                : "text-zinc-600 hover:bg-zinc-100"
-            }`}
           >
-            <Dumbbell className="h-4 w-4" />
-            Actividades
-          </button>
+            <Dumbbell className="h-4 w-4 shrink-0" />
+            {TAB_LABELS.activities}
+          </TabButton>
         </nav>
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-6">
-        <DailyVideoPlayer />
-        {tab === "nutrition" ? (
-          <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
-            <div className="flex flex-col gap-6">
-              <FoodEntryForm onAddMeal={handleAddMeal} />
-              <DailyNutritionTable meals={dayState.meals} />
+        <div
+          key={tab}
+          className="animate-[fadeIn_0.25s_ease-out]"
+          style={{
+            animationFillMode: "backwards",
+          }}
+        >
+          {tab === "home" && (
+            <div className="flex min-h-[calc(100dvh-11rem)] flex-col items-center justify-center py-4 sm:min-h-[calc(100dvh-10rem)] sm:py-8">
+              <DailyVideoPlayer variant="hero" />
             </div>
-            <aside>
-              <BalanceDashboard
-                calorieGoal={profile.daily_calorie_goal}
-                consumed={balance.consumed.calories}
-                burned={balance.burned}
-                remaining={balance.remainingCalories}
-                protein_g={balance.consumed.protein_g}
-                carbs_g={balance.consumed.carbs_g}
-                fat_g={balance.consumed.fat_g}
-                weeklyNetCalories={weeklyNetCalories}
-              />
-            </aside>
-          </div>
-        ) : (
-          <ActivitiesPanel />
-        )}
+          )}
+
+          {tab === "nutrition" && (
+            <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+              <div className="flex flex-col gap-6">
+                <FoodEntryForm onAddMeal={handleAddMeal} />
+                <DailyNutritionTable meals={dayState.meals} />
+              </div>
+              <aside className="lg:sticky lg:top-36 lg:self-start">
+                <BalanceDashboard
+                  calorieGoal={profile.daily_calorie_goal}
+                  consumed={balance.consumed.calories}
+                  burned={balance.burned}
+                  remaining={balance.remainingCalories}
+                  protein_g={balance.consumed.protein_g}
+                  carbs_g={balance.consumed.carbs_g}
+                  fat_g={balance.consumed.fat_g}
+                  weeklyNetCalories={weeklyNetCalories}
+                />
+              </aside>
+            </div>
+          )}
+
+          {tab === "activities" && <ActivitiesPanel />}
+        </div>
       </main>
     </div>
   );
