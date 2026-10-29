@@ -23,6 +23,10 @@ import { MEAL_SLOT_LABELS, type MealEntry, type MealSlot } from "@/types/nutriti
 
 const MEAL_OPTIONS: MealSlot[] = ["desayuno", "almuerzo", "merienda", "cena"];
 
+/** Texto oscuro fijo: evita heredar color claro del modo oscuro del sistema. */
+const FIELD_TEXT =
+  "bg-white text-zinc-900 placeholder:text-zinc-500 caret-zinc-900";
+
 interface FoodEntryFormProps {
   onAddMeal: (entry: MealEntry) => void;
 }
@@ -318,7 +322,7 @@ export function FoodEntryForm({ onAddMeal }: FoodEntryFormProps) {
               onFocus={() => setListOpen(true)}
               placeholder="Tus habituales o buscar…"
               autoComplete="off"
-              className="w-full rounded-xl border border-zinc-200 py-2.5 pl-10 pr-3 text-sm outline-none ring-emerald-500 focus:ring-2"
+              className={`w-full rounded-xl border border-zinc-200 py-2.5 pl-10 pr-3 text-sm outline-none ring-emerald-500 focus:ring-2 ${FIELD_TEXT}`}
             />
           </div>
 
@@ -418,7 +422,7 @@ export function FoodEntryForm({ onAddMeal }: FoodEntryFormProps) {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 list={selected ? "salud-saved-amounts" : undefined}
-                className="min-w-0 flex-1 rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none ring-emerald-500 focus:ring-2"
+                className={`min-w-0 flex-1 rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none ring-emerald-500 focus:ring-2 ${FIELD_TEXT}`}
               />
               {selected && savedAmounts.length > 0 && (
                 <datalist id="salud-saved-amounts">
@@ -438,7 +442,7 @@ export function FoodEntryForm({ onAddMeal }: FoodEntryFormProps) {
               <select
                 value={unit}
                 onChange={(e) => setUnit(e.target.value as QuantityUnit)}
-                className="rounded-xl border border-zinc-200 bg-white px-2 py-2.5 text-sm outline-none ring-emerald-500 focus:ring-2"
+                className={`rounded-xl border border-zinc-200 px-2 py-2.5 text-sm outline-none ring-emerald-500 focus:ring-2 ${FIELD_TEXT}`}
               >
                 <option value="grams">Gramos</option>
                 <option value="portions">Porciones</option>
@@ -481,7 +485,7 @@ export function FoodEntryForm({ onAddMeal }: FoodEntryFormProps) {
             <select
               value={mealSlot}
               onChange={(e) => setMealSlot(e.target.value as MealSlot)}
-              className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm outline-none ring-emerald-500 focus:ring-2"
+              className={`w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none ring-emerald-500 focus:ring-2 ${FIELD_TEXT}`}
             >
               {MEAL_OPTIONS.map((slot) => (
                 <option key={slot} value={slot}>
@@ -506,7 +510,7 @@ export function FoodEntryForm({ onAddMeal }: FoodEntryFormProps) {
                   value={manualCalories}
                   onChange={(e) => setManualCalories(e.target.value)}
                   placeholder="kcal"
-                  className="mt-1 w-full rounded-lg border border-zinc-200 px-2.5 py-2 text-sm outline-none ring-emerald-500 focus:ring-2"
+                  className={`mt-1 w-full rounded-lg border border-zinc-200 px-2.5 py-2 text-sm outline-none ring-emerald-500 focus:ring-2 ${FIELD_TEXT}`}
                 />
               </label>
               <label className="block text-xs">
@@ -517,7 +521,7 @@ export function FoodEntryForm({ onAddMeal }: FoodEntryFormProps) {
                   value={manualProtein}
                   onChange={(e) => setManualProtein(e.target.value)}
                   placeholder="0"
-                  className="mt-1 w-full rounded-lg border border-zinc-200 px-2.5 py-2 text-sm outline-none ring-emerald-500 focus:ring-2"
+                  className={`mt-1 w-full rounded-lg border border-zinc-200 px-2.5 py-2 text-sm outline-none ring-emerald-500 focus:ring-2 ${FIELD_TEXT}`}
                 />
               </label>
               <label className="block text-xs">
@@ -528,7 +532,7 @@ export function FoodEntryForm({ onAddMeal }: FoodEntryFormProps) {
                   value={manualCarbs}
                   onChange={(e) => setManualCarbs(e.target.value)}
                   placeholder="0"
-                  className="mt-1 w-full rounded-lg border border-zinc-200 px-2.5 py-2 text-sm outline-none ring-emerald-500 focus:ring-2"
+                  className={`mt-1 w-full rounded-lg border border-zinc-200 px-2.5 py-2 text-sm outline-none ring-emerald-500 focus:ring-2 ${FIELD_TEXT}`}
                 />
               </label>
               <label className="block text-xs">
@@ -539,7 +543,7 @@ export function FoodEntryForm({ onAddMeal }: FoodEntryFormProps) {
                   value={manualFat}
                   onChange={(e) => setManualFat(e.target.value)}
                   placeholder="0"
-                  className="mt-1 w-full rounded-lg border border-zinc-200 px-2.5 py-2 text-sm outline-none ring-emerald-500 focus:ring-2"
+                  className={`mt-1 w-full rounded-lg border border-zinc-200 px-2.5 py-2 text-sm outline-none ring-emerald-500 focus:ring-2 ${FIELD_TEXT}`}
                 />
               </label>
             </div>
