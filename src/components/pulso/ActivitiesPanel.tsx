@@ -12,6 +12,7 @@ import {
   toggleTagOnDate,
 } from "@/lib/activities/storage";
 import { todayIsoDate } from "@/lib/nutrition/calculations";
+import { syncActivityLogToCloud } from "@/lib/supabase/cloud-sync";
 import {
   ACTIVITY_TAGS,
   ACTIVITY_TAG_BY_ID,
@@ -39,7 +40,12 @@ export function ActivitiesPanel() {
   }, []);
 
   useEffect(() => {
-    if (hydrated) saveActivityLog(log);
+    if (!hydrated) return;
+    saveActivityLog(log);
+    const timer = window.setTimeout(() => {
+      void syncActivityLogToCloud(log);
+    }, 800);
+    return () => window.clearTimeout(timer);
   }, [log, hydrated]);
 
   const selectedTags = useMemo(

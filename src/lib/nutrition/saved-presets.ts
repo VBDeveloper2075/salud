@@ -9,6 +9,7 @@ import {
   SAVED_PRESETS_KEY,
   ensureSaludStorageMigrated,
 } from "@/lib/salud/storage";
+import { syncPresetsToCloud } from "@/lib/supabase/cloud-sync";
 
 export function loadSavedPresets(): SavedFoodPreset[] {
   if (typeof window === "undefined") return [];
@@ -25,6 +26,7 @@ export function loadSavedPresets(): SavedFoodPreset[] {
 
 function persist(presets: SavedFoodPreset[]) {
   localStorage.setItem(SAVED_PRESETS_KEY, JSON.stringify(presets));
+  void syncPresetsToCloud(presets);
 }
 
 export function customFoodId(name: string): string {

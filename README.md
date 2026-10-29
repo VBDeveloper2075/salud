@@ -9,7 +9,7 @@ App web personal para **registrar nutrición y actividad física** sin servicios
 - **Dashboard:** balance calórico diario, macros y gráficos semanales (Recharts).
 - **Perfil:** meta de kcal, peso y datos básicos.
 
-Los datos del día (comidas, perfil, actividades) se guardan en **`localStorage`** del navegador. Supabase está preparado en `supabase/migrations/` pero aún no está conectado al flujo principal.
+Los datos se guardan en **`localStorage`** y, si configurás Supabase e iniciás sesión en **Perfil**, se sincronizan con PostgreSQL (perfil, comidas por día, calendario de actividades y comidas habituales).
 
 ## Stack
 
@@ -21,7 +21,7 @@ Los datos del día (comidas, perfil, actividades) se guardan en **`localStorage`
 | Gráficos | [Recharts](https://recharts.org/) |
 | Iconos | [Lucide React](https://lucide.dev/) |
 | Validación | [Zod](https://zod.dev/) (donde aplica) |
-| Backend opcional | [Supabase](https://supabase.com/) (cliente SSR listo, sin sync activo) |
+| Backend opcional | [Supabase](https://supabase.com/) Auth + PostgreSQL (sync en Perfil) |
 
 ## Requisitos
 
@@ -43,8 +43,16 @@ npm run start   # servir build local
 npm run lint
 ```
 
-Variables de entorno opcionales (Supabase): copiá `.env.example` a `.env.local` y completá `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` cuando las uses.
+### Supabase
+
+1. Creá un proyecto en [Supabase](https://supabase.com/).
+2. En **SQL Editor**, ejecutá en orden `supabase/migrations/001_initial_schema.sql` y `002_app_extensions.sql`.
+3. Copiá `.env.example` → `.env.local` y completá `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+4. En **Authentication → Providers**, habilitá **Email** (contraseña).
+5. En la app, **Perfil → Cuenta y nube**: registrate o iniciá sesión.
+
+Proyecto compatible con [Vercel](https://vercel.com/) u otro host Next.js; las variables de Supabase son opcionales si solo usás almacenamiento local.
 
 ## Despliegue
 
-Proyecto compatible con [Vercel](https://vercel.com/) u otro host que soporte Next.js; no requiere variables de entorno para el uso actual solo con almacenamiento local.
+En el host, definí las mismas variables `NEXT_PUBLIC_*` que en local si querés sync en la nube.

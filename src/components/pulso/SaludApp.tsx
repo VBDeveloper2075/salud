@@ -18,6 +18,12 @@ import {
   PROFILE_KEY,
   ensureSaludStorageMigrated,
 } from "@/lib/salud/storage";
+import {
+  loadDayFromCloud,
+  syncDayToCloud,
+  syncProfileToCloud,
+} from "@/lib/supabase/cloud-sync";
+import { fetchRemoteProfile, getSessionUserId } from "@/lib/supabase/repository";
 import type { DailyNutritionState, MealEntry, UserProfile } from "@/types/nutrition";
 import { DEFAULT_PROFILE } from "@/types/nutrition";
 
@@ -101,7 +107,25 @@ export function SaludApp() {
   useEffect(() => {
     const today = todayIsoDate();
     setLogDate(today);
-    setDayState(loadDay(today));
+    const local = loadDay(today);
+    setDayState(local);
+
+    void (async () => {
+      const userId = await getSessionUserId();
+      if (!userId) return;
+
+      const remoteProfile = await fetchRemoteProfile(userId);
+      if (remoteProfile) {
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(remoteProfile));
+        setProfile(remoteProfile);
+      }
+
+      const remoteDay = await loadDayFromCloud(today);
+      if (remoteDay) {
+        setDayState(remoteDay);
+        saveDay(remoteDay);
+      }
+    })();
   }, []);
   const [logDate, setLogDate] = useState<string | null>(null);
   const [dayState, setDayState] = useState<DailyNutritionState>({
@@ -111,7 +135,12 @@ export function SaludApp() {
   });
 
   useEffect(() => {
+    if (!dayState.logDate) return;
     saveDay(dayState);
+    const timer = window.setTimeout(() => {
+      void syncDayToCloud(dayState);
+    }, 800);
+    return () => window.clearTimeout(timer);
   }, [dayState]);
 
   const balance = useMemo(

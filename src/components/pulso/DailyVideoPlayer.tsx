@@ -83,11 +83,6 @@ export function DailyVideoPlayer({ variant = "hero" }: DailyVideoPlayerProps) {
         <h2 className="text-sm font-semibold tracking-wide">Tu short de hoy</h2>
       </div>
       {frame}
-      {video && (
-        <p className="mt-4 max-w-[420px] text-center text-xs text-emerald-100/70">
-          Un video nuevo cada día · Nutrición y actividades en las otras pestañas
-        </p>
-      )}
     </section>
   );
 }

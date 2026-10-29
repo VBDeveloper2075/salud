@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AuthCloudPanel } from "@/components/pulso/AuthCloudPanel";
 import {
   PROFILE_KEY,
   ensureSaludStorageMigrated,
 } from "@/lib/salud/storage";
+import { syncProfileToCloud } from "@/lib/supabase/cloud-sync";
 import type { UserProfile } from "@/types/nutrition";
 import { DEFAULT_PROFILE } from "@/types/nutrition";
 
@@ -27,6 +29,7 @@ export default function PerfilPage() {
   function handleSave(e: React.FormEvent) {
     e.preventDefault();
     localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    void syncProfileToCloud(profile);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   }
@@ -44,9 +47,13 @@ export default function PerfilPage() {
 
         <h1 className="text-2xl font-semibold text-zinc-900">Tu perfil</h1>
         <p className="mt-1 text-sm text-zinc-600">
-          Metas y datos para personalizar el balance calórico. (Persistencia
-          local; con Supabase Auth se sincroniza en la nube.)
+          Metas y datos para personalizar el balance calórico. Se guardan en
+          este navegador y, si iniciás sesión, también en Supabase.
         </p>
+
+        <div className="mt-6">
+          <AuthCloudPanel />
+        </div>
 
         <form
           onSubmit={handleSave}
